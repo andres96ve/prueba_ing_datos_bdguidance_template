@@ -1,0 +1,5 @@
+FROM postgres:13-alpine
+
+ENV POSTGRES_DB dw_dvdrental
+ENV POSTGRES_USER postgres
+ENV POSTGRES_PASSWORD 12345
