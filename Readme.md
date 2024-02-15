@@ -17,7 +17,7 @@ Se propone la creación de un Data Warehouse para una tienda ficticia que comerc
 
 Las tareas a desarrollar son las siguientes:
 
-- Clonar el repositorio x de GitHub, en el que se encuentra la plantilla general y los datos a usar. 
+- Clonar el repositorio https://github.com/bdg-ittic/prueba_ing_datos_bdguidance_template.git de GitHub, en el que se encuentra la plantilla general y los datos a usar. 
 - Levantar los contenedores Docker que se encuentra en el repositorio, estos crearan las bases de datos con motor Postgres a usar, tanto para la consulta como donde debe ubicarse el Data Warehouse.
 - Familiarizarse con la base de datos dvdrental.
 - Proponer un modelo físico del almacén de datos, este debe ser un modelo de estrella compuesto por tablas de dimensiones y hechos, la finalidad del data warehouse es el de asistir con datos que permitan la creación del Dashboard en Power BI con los elementos propuestos.
