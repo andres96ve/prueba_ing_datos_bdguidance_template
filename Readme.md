@@ -1,38 +1,46 @@
-# Prueba técnica ingeniero de datos BD Guidance
+# Prueba tecnica ingeniero de datos BD Guidance.
 
-## Objetivo
+## Propuesta para el data warehouse de dvdrental.
 
-Evaluar los conocimientos de los candidatos relacionados al uso de herramientas utilizadas en la ingeniería de datos y las actividades propias del cargo en BD Guidance, como lo son: el uso de Docker, GitHub, Python y Power BI para la generación de bases de datos, consultas SQL y el uso de Python (o cualquier otro lenguaje y herramientas como pyspark y airflow) para la creación de pipelines que permitan la extracción, transformación y creación de una bodega de datos, así como su uso en la creación de un dashboard analitico en Power BI. 
+La propuesta del datawarehouse consiste en un modelo estrella que contiene la tabla de hechos llamada Fact_Payment y 3 tablas dimensionales_Dim_Country,Dim_Film y Dim_Customer.
 
-## Problema propuesto
+![image.png](https://res.craft.do/user/full/439fe800-da20-b63d-fbda-2763e3c7128c/doc/2565ce43-8e51-e7df-0f7b-fa416f581e05/48ed30dc-f241-456a-980f-24e77ee2e14a)
 
-Se propone la creación de un Data Warehouse para una tienda ficticia que comercializa dvd 's llamada dvdrental, se debe partir de los datos transaccionales para generar procesos de extracción, transformación y carga. Posterior a la creación del data warehouse se debe diseñar un dashboard en Power BI, en el que se muestren los siguientes indicadores y gráficos:
+## Construccion de los Dockers
 
-1. Ventas totales en USD.
-2. Cantidad total de las transacciones de ventas.
-3. Gráfico con las ventas en dólares por país en los que se ubican las tiendas.
-4. Gráfico de ventas en dólares a través del tiempo.
-5. Identificar los cinco clientes con mayor valor total en compras.
-6. Identificar las cinco películas con mayores ventas totales.
+A continuacion se establecen los pasos requeridos para construir y correr los dockers en los que se encuentra el codigo para crear la base de datos transaccional (base_datos_transaccional), la base de datos en la que se almacena el Data Warehouse propuesto (data_warehouse) y el contenedor en el que se ejecutan los ETLs (etl_dw_dvdrental)
 
-Las tareas a desarrollar son las siguientes:
+1. Se debe crear en el docker un network para la conexion de los contenedores, el comando a usar es:
 
-- Clonar el repositorio https://github.com/bdg-ittic/prueba_ing_datos_bdguidance_template.git de GitHub, en el que se encuentra la plantilla general y los datos a usar. 
-- Levantar los contenedores Docker que se encuentra en el repositorio, estos crearan las bases de datos con motor Postgres a usar, tanto para la consulta como donde debe ubicarse el Data Warehouse.
-- Familiarizarse con la base de datos dvdrental.
-- Proponer un modelo físico del almacén de datos, este debe ser un modelo de estrella compuesto por tablas de dimensiones y hechos, la finalidad del data warehouse es el de asistir con datos que permitan la creación del Dashboard en Power BI con los elementos propuestos.
-- En el contenedor Docker en el que se encuentra el proceso para la generación de los ETLs, se debe generar el código requerido para la ejecución de los pipelines que se encargan de las transformaciones de datos y llevarlos al contenedor Docker en el que se levanta el almacén de datos.
-- El contenedor Docker con el Data Warehouse debe contener un modelo de estrella que se encuentre conformado por las tablas de dimensiones y hechos propuestas. El objetivo del almacén de datos es el de permitir el análisis de datos.
-- Se debe generar un dashboard en Power BI, debe conectarse al contenedor en el que se encuentra el almacén de datos, este debe de permitir visualizar los elementos propuestos. Aplicar técnicas de visualización de datos y buenas prácticas en la creación de tableros de control.
+```other
+docker network create dw_network
+```
 
-## Entregables
+2. Para crear el contenedor con la base de datos transaccional "dvdrental" en Postgres se deben ejecutar los siguientes comandos:
 
-1. Se debe crear un nuevo repositorio de GitHub, que contenga el código usado, junto con los documentos con las tareas resueltas y se debe cargar una imagen en el que se muestre el modelo de estrella propuesto (modelo físico). 
-2. Se debe de cargar al repositorio de GitHub el archivo .pbix que contiene el tablero de control.
-3. Incluir en el GitHub un documento tipo Markdown en el que se documente de manera general las tareas realizadas, agregando los comentarios que considere necesarios e imágenes de los resultados.
+```other
+cd base_datos_transaccional
+docker build -t imagen_postgres .
+docker run -d --net dw_network -p 5432:5432 --name dvdrental_contenedor imagen_postgres
+```
 
-Para BD Guidance es muy importante que sus trabajadores tengan un alma investigativa e inquieta intelectualmente, así que si no conoce o ha usado alguna de estas herramientas, esta es una oportunidad para aprender y mostrarnos sus cualidades en la resolución de problemas técnicos y el aprendizaje continuo. Proponemos algunas herramientas, pero queda a su criterio la utilización de las que considere necesarias para ejecutar las tareas propuestas.
+3. Para crear la el contenedor en el que se almacena la base de datos Postgres "dw_dvdrental" en la que se genera el almacen de datos se debe ejecutar el siguiente comando:
 
-Le deseamos un feliz desarrollo de la prueba, quedamos atentos ante cualquier duda que se presente. La fecha límite de plazo para la entrega de la prueba es el 20 de febrero a las 5:00 pm, el medio de entrega usado es la notificación por medio de correo electrónico a fabian.pedreros@bdguidance.com, en el que se comparte el link al repositorio en el que se encuentran todos los entregables mencionados.
+```other
+cd data_warehouse
+docker build -t imagen_dw_dvdrental .
+docker run -d --net dw_network -p 5431:5432 --name dw_dvdrental_contenedor imagen_dw_dvdrental
+```
 
-Gracias.
+## Data Warehouse obtenido
+
+El datawarehouse obetenido consiste en el modelo estrella mencionado anteriormente.
+
+![WhatsApp Image 2024-02-20 at 5.16.48 PM.jpeg](https://res.craft.do/user/full/439fe800-da20-b63d-fbda-2763e3c7128c/doc/2565ce43-8e51-e7df-0f7b-fa416f581e05/db111280-8bd4-456f-b95d-00aa58d0b608)
+
+En los archivos suministrados hay mayor detalle
+
+## Tablero en Power BI
+
+![WhatsApp Image 2024-02-20 at 5.20.56 PM.jpeg](https://res.craft.do/user/full/439fe800-da20-b63d-fbda-2763e3c7128c/doc/2565ce43-8e51-e7df-0f7b-fa416f581e05/08dd4cf1-3c54-42d5-b378-fec3fe8ee9c5)
+
